@@ -71,21 +71,68 @@ string display(Stack& s) {
 
 // SOAL 1
 bool push(Stack& s, int nilai) {
-    return false;
+    Node* newNode= new Node;
+    newNode->data=nilai;
+    newNode->next=nullptr;
+
+    if(isEmpty(s)){
+        s.top=newNode; 
+    } else{
+        newNode->next=s.top;
+        s.top=newNode;
+}
+    return true;
 }
 
 // SOAL 2
 bool pop(Stack& s, int& nilai) {
-    return false;
+    if(isEmpty(s)){
+        return false;
+    } 
+        Node* temp = s.top;
+        nilai=temp->data;
+        s.top=s.top->next;
+        delete temp;
+        return true;
+    
 }
 
 // SOAL 3
 void clear(Stack& s) {
+    while(s.top!=nullptr){
+        Node* temp =s.top;
+        s.top=s.top->next;
+        delete temp;
+    }
 }
 
 // SOAL 4
 bool kurungSeimbang(const string& ekspresi) {
-    return false;
+    Stack temp;
+    inisialisasi(temp);
+
+    for (char c : ekspresi) {
+        // 1. Push untuk kurung buka
+        if (c == '(' || c == '[' || c == '{') {
+            push(temp, c);
+        } 
+        // 2. Evaluasi untuk kurung tutup
+        else if (c == ')' || c == ']' || c == '}') {
+            int topVal;
+            // Jika stack kosong atau kurung tidak cocok
+            if (!pop(temp, topVal) || 
+               (c == ')' && topVal != '(') ||
+               (c == ']' && topVal != '[') ||
+               (c == '}' && topVal != '{')) {
+                clear(temp);
+                return false;
+            }
+        }
+    }
+
+    bool valid = isEmpty(temp);
+    clear(temp); // Bersihkan sisa memori jika ada
+    return valid;
 }
 
 // =============================================================================
